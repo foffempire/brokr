@@ -1,0 +1,1 @@
+if someone register thru your referral link, add to transaction with type = "Referral"
