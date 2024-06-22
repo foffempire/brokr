@@ -159,7 +159,7 @@
 		}
 
 
-		private function emailIsVerified($email){
+		public function emailIsVerified($email){
 			$val = 1;
 
 			$stmt = $this->kon->prepare("SELECT * FROM users WHERE email = :em AND is_verified = :val ");
@@ -169,9 +169,6 @@
 
 			if($stmt->rowCount() == 1){
 				return true;
-			}else{
-				$this->error = "Check your email to activate your account. <a href='resend-code?email=$email'>Resend code</a>";
-				return false;
 			}
 		}
 
@@ -195,9 +192,10 @@
 		public function confirmEmail($email, $prc){
 			$val = 1;
 
-			$stmt = $this->kon->prepare("SELECT * FROM users WHERE email = :em AND is_verified = :val ");
+			$stmt = $this->kon->prepare("SELECT * FROM users WHERE email = :em AND is_verified = :val AND pw_reset_code = :prc ");
 			$stmt->bindParam(":val", $val);
 			$stmt->bindParam(":em", $email);
+			$stmt->bindParam(":prc", $prc);
 			$stmt->execute();
 			if ($stmt->rowCount() != 1) {
 				$query = $this->kon->prepare("UPDATE users SET is_verified = :val WHERE email = :em AND pw_reset_code = :prc ");

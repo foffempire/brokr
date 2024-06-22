@@ -3,7 +3,7 @@
 class Helper{
 
 	public static function site_name(){
-		return "Flipearners";
+		return "Wealth Fusion";
 	}
 
 	public static function siteACR(){

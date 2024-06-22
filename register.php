@@ -1,5 +1,6 @@
 <?php 
     require_once("user/includes/init.php");
+    require_once("includes/email/email.php");
     if(logged_in()){
         Helper::redirect("user/dashboard");
     }
@@ -13,11 +14,11 @@
 
     if(isset($_POST['register'])){
         $email = Sanitizer::sanitizeEmail($_POST['email']);
-        $firstname = Sanitizer::sanitizeEmail($_POST['first_name']);
-        $lastname = Sanitizer::sanitizeEmail($_POST['last_name']);
-        $username = Sanitizer::sanitizeEmail($_POST['username']);
-        $countryCode = Sanitizer::sanitizeEmail($_POST['country']);
-        $ph = Sanitizer::sanitizeEmail($_POST['phone']);
+        $firstname = Sanitizer::sanitizeName($_POST['first_name']);
+        $lastname = Sanitizer::sanitizeName($_POST['last_name']);
+        $username = Sanitizer::userName($_POST['username']);
+        $countryCode = Sanitizer::sanitizeInput($_POST['country']);
+        $ph = Sanitizer::sanitizeInput($_POST['phone']);
         $pw = Sanitizer::sanitizeInput($_POST['password']);
         $pw2 = Sanitizer::sanitizeInput($_POST['cpassword']);
 
@@ -33,12 +34,44 @@
           $transaction = new Transaction($kon);
           $giveBonus = $transaction->addTransaction($email, 'Signup Bonus', 10, 0, 'Success', 'System');
           if($giveBonus){
-            $_SESSION['crypBroke'] = $email;
-            setcookie("crypBroke", $email, time() + (86400 * 1), "/");
             // send mail
+            $link = Helper::site_url()."email-verify?email=$email&prc=$prc";
+            $fakeToken = Helper::randomString(35);
+            $subject = "Verify your email";
+            $html = "<!DOCTYPE html>
+              <html lang='en'>
+              <head>
+                  <meta charset='UTF-8'>
+                  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                  <title>Email</title>
+              </head>
+              <body style='font-family: \"Segoe UI\", Tahoma, Geneva, Verdana, sans-serif;font-size: 16px;color: #474747;line-height:30px;'>
+
+                  <div style='background-color: #6d08a8;height:10px;width:100%;'></div>
+                  <div style='background-color: #ffffff;padding:10px 0;width:100%;display:flex;justify-content:center;'>
+                      <img src='./assets/global/images/Z5TuPXphNN6rtz4h278X.png' alt='logo' width='40'>
+                  </div>
+                  <div style='padding: 20px;'>
+                      <div style='font-weight:600;font-size: 18px;margin-bottom: 30px;'>Verify Email Address</div>    
+
+                      <div style='margin-bottom: 10px;'>Hi $firstname $lastname</div>
+                      <div>Please click the button below to verify your email address.</div>
+
+                      <div style='margin:30px 0;'>
+                          <a href='$link' style='padding: 10px 25px; color: #ffffff;background-color: #ff0055;text-decoration: none;'>VERIFY EMAIL ADDRESS</a>
+                      </div>
+                  </div>
+                  <div style='background-color: #6d08a8;height:10px;width:100%;'></div>
+                  <div style='padding: 20px;'>
+                      <p>If you're having trouble clicking the 'Verify Email Address' button, copy abd paste the URL below into your web browser: <a href='$link'>$link</a></p>
+                  </div>
+                  <div style='background-color: #6d08a8;height:10px;width:100%;'></div>
+              </body>
+              </html>";
+            sendMail($email, $subject, $html);
 
             // redirect
-            Helper::redirect("email_confirmation");          
+            Helper::redirect("email_confirmation?pass=$fakeToken&qm=$email");  
           }
         }
 
@@ -46,43 +79,27 @@
 ?>
 <!DOCTYPE html>
 <html lang="en">
-  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="keywords" content="Texforex" />
-    <meta name="description" content="Texforex" />
-    <link rel="canonical" href="register" />
-    <link
-      rel="shortcut icon"
-      href="./assets/global/images/Z5TuPXphNN6rtz4h278X.png"
-      type="image/x-icon"
-    />
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="keywords" content="<?= Helper::site_name() ?>">
+    <meta name="description" content="<?= Helper::site_name() ?>">
+    <link rel="canonical" href="./"/>
+    <link rel="shortcut icon" href="assets/global/images/Z5TuPXphNN6rtz4h278X.png" type="image/x-icon"/>
 
-    <link
-      rel="icon"
-      href="./assets/global/images/Z5TuPXphNN6rtz4h278X.png"
-      type="image/x-icon"
-    />
-    <link rel="stylesheet" href="./assets/global/css/fontawesome.min.css" />
-    <link
-      rel="stylesheet"
-      href="./assets/frontend/css/vendor/bootstrap.min.css"
-    />
-    <link rel="stylesheet" href="./assets/frontend/css/animate.css" />
-    <link rel="stylesheet" href="./assets/frontend/css/owl.carousel.min.css" />
-    <link rel="stylesheet" href="./assets/frontend/css/nice-select.css" />
-    <link rel="stylesheet" href="./assets/global/css/datatables.min.css" />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="assets/vendor/mckenziearts/laravel-notify/css/notify.css"
-    />
-    <link rel="stylesheet" href="./assets/global/css/custom.css" />
-    <link rel="stylesheet" href="./assets/frontend/css/magnific-popup.css" />
-    <link rel="stylesheet" href="./assets/frontend/css/aos.css" />
-    <link rel="stylesheet" href="./assets/frontend/css/styles.css" />
+    <link rel="icon" href="assets/global/images/Z5TuPXphNN6rtz4h278X.png" type="image/x-icon"/>
+    <link rel="stylesheet" href="assets/global/css/fontawesome.min.css"/>
+    <link rel="stylesheet" href="assets/frontend/css/vendor/bootstrap.min.css"/>
+    <link rel="stylesheet" href="assets/frontend/css/animate.css"/>
+    <link rel="stylesheet" href="assets/frontend/css/owl.carousel.min.css"/>
+    <link rel="stylesheet" href="assets/frontend/css/nice-select.css"/>
+    <link rel="stylesheet" href="assets/global/css/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="assets/vendor/mckenziearts/laravel-notify/css/notify.css"/>        
+    <link rel="stylesheet" href="assets/global/css/custom.css"/>
+    <link rel="stylesheet" href="assets/frontend/css/magnific-popup.css"/>
+    <link rel="stylesheet" href="assets/frontend/css/aos.css"/>
+    <link rel="stylesheet" href="assets/frontend/css/styles.css?"/>
 
     <style>
       .site-head-tag {
@@ -96,7 +113,7 @@
       }
     </style>
 
-    <title>Texforex - Register</title>
+    <title><?= Helper::site_name() ?> - Register</title>
   </head>
   <body>
 
@@ -116,7 +133,7 @@
               </div>
               <div class="title">
                 <h2>💪 Create an account</h2>
-                <p>Register to continue with Texforex</p>
+                <p>Register to continue with <?= Helper::site_name() ?></p>
               </div>
               <div class="site-auth-form">
               <?= $account->getError() ?>
@@ -671,34 +688,24 @@
     </section>
     <!-- Login Section End -->
 
-    <script src="./assets/global/js/jquery.min.js"></script>
-    <script src="./assets/global/js/jquery-migrate.js"></script>
+<script src="assets/global/js/jquery.min.js"></script>
+<script src="assets/global/js/jquery-migrate.js"></script>
 
-    <script src="./assets/frontend/js/bootstrap.bundle.min.js"></script>
-    <script src="./assets/frontend/js/scrollUp.min.js"></script>
+<script src="assets/frontend/js/bootstrap.bundle.min.js"></script>
+<script src="assets/frontend/js/scrollUp.min.js"></script>
 
-    <script src="./assets/frontend/js/owl.carousel.min.js"></script>
-    <script src="./assets/global/js/waypoints.min.js"></script>
-    <script src="./assets/frontend/js/jquery.counterup.min.js"></script>
-    <script src="./assets/frontend/js/jquery.nice-select.min.js"></script>
-    <script src="./assets/frontend/js/lucide.min.js"></script>
-    <script src="./assets/frontend/js/magnific-popup.min.js"></script>
-    <script src="./assets/frontend/js/aos.js"></script>
-    <script
-      src="./assets/global/js/datatables.min.js"
-      type="text/javascript"
-      charset="utf8"
-    ></script>
-    <script src="./assets/frontend/js/main.js"></script>
-    <script src="./assets/frontend/js/cookie.js"></script>
-    <script src="./assets/global/js/custom.js"></script>
-    <script>
-      (function ($) {
-        "use strict";
-        // AOS initialization
-        AOS.init();
-      })(jQuery);
-    </script>
+<script src="assets/frontend/js/owl.carousel.min.js"></script>
+<script src="assets/global/js/waypoints.min.js"></script>
+<script src="assets/frontend/js/jquery.counterup.min.js"></script>
+<script src="assets/frontend/js/jquery.nice-select.min.js"></script>
+<script src="assets/frontend/js/lucide.min.js"></script>
+<script src="assets/frontend/js/magnific-popup.min.js"></script>
+<script src="assets/frontend/js/aos.js"></script>
+<script src="assets/global/js/datatables.min.js" type="text/javascript" charset="utf8"></script>
+<script src="assets/frontend/js/main.js"></script>
+<script src="assets/frontend/js/cookie.js"></script>
+<script src="assets/global/js/custom.js"></script>
+
 
     <script
       type="text/javascript"

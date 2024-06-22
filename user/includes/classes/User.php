@@ -125,6 +125,14 @@
 			}
 		}
 
+		public function isVerified(){
+			return $this->data['is_verified'];
+		}
+
+		public function isActive(){
+			return $this->data['is_active'];
+		}
+
 		public function countReferral(){
 			$unikID = $this->unik();
 			$query = $this->kon->prepare("SELECT * FROM users WHERE referrer = :ref ");

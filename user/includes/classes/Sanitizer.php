@@ -20,6 +20,14 @@
 			return $data;
 		}
 
+		public static function userName($data){
+			$data = stripslashes($data);		
+			$data = htmlspecialchars($data);
+			$data = str_replace(" ", "", $data);
+			$data = strtolower($data);
+			return $data;
+		}
+
 		public static function sanitizeEmail($data){
 			$data = trim($data);
 			$data = stripslashes($data);

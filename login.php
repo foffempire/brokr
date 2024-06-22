@@ -12,14 +12,15 @@
         $wasSuccessful = $account->login($email, $pw);
 
         if($wasSuccessful){
-            $_SESSION['crypBroke'] = $email;
-            setcookie("crypBroke", $email, time() + (86400 * 1), "/");
-            if(isset($_SESSION['location'])){
-                Helper::redirect($_SESSION['location']);
-                unset($_SESSION['location']);
-            }else{
+            // check if email is verified
+            if($account->emailIsVerified($email)){
+                $_SESSION['crypBroke'] = $email;
+                setcookie("crypBroke", $email, time() + (86400 * 1), "/");          
                 Helper::redirect("user/dashboard");
-            }            
+            }else{
+                $fakeToken = Helper::randomString(35);
+                Helper::redirect("email_confirmation?pass=$fakeToken&qm=$email");
+            }
         }
 
     }
@@ -30,10 +31,9 @@
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="csrf-token" content="icZS80o5U7GQcDQvrwVhBDHeTslfvCyYJwUlaH07">
-    <meta name="keywords" content="Texforex">
-    <meta name="description" content="Texforex">
-    <link rel="canonical" href="login"/>
+    <meta name="keywords" content="<?= Helper::site_name() ?>">
+    <meta name="description" content="<?= Helper::site_name() ?>">
+    <link rel="canonical" href="./"/>
     <link rel="shortcut icon" href="assets/global/images/Z5TuPXphNN6rtz4h278X.png" type="image/x-icon"/>
 
     <link rel="icon" href="assets/global/images/Z5TuPXphNN6rtz4h278X.png" type="image/x-icon"/>
@@ -43,10 +43,11 @@
     <link rel="stylesheet" href="assets/frontend/css/owl.carousel.min.css"/>
     <link rel="stylesheet" href="assets/frontend/css/nice-select.css"/>
     <link rel="stylesheet" href="assets/global/css/datatables.min.css"/>
-        <link rel="stylesheet" type="text/css" href="assets/vendor/mckenziearts/laravel-notify/css/notify.css"/>        <link rel="stylesheet" href="assets/global/css/custom.css"/>
+    <link rel="stylesheet" type="text/css" href="assets/vendor/mckenziearts/laravel-notify/css/notify.css"/>        
+    <link rel="stylesheet" href="assets/global/css/custom.css"/>
     <link rel="stylesheet" href="assets/frontend/css/magnific-popup.css"/>
-            <link rel="stylesheet" href="assets/frontend/css/aos.css"/>
-        <link rel="stylesheet" href="assets/frontend/css/styles.css"/>
+    <link rel="stylesheet" href="assets/frontend/css/aos.css"/>
+    <link rel="stylesheet" href="assets/frontend/css/styles.css?"/>
 
     <style>
 .site-head-tag {
@@ -59,15 +60,9 @@ html, body {
 }
     </style>
 
-    <title>Texforex -     Login
-</title>
-
-
+    <title><?= Helper::site_name() ?> - Login</title>
 </head>
 <body>
-
-
-
     <!-- Login Section -->
     <section class="section-style site-auth">
         <div class="container">
@@ -79,7 +74,7 @@ html, body {
                         </div>
                         <div class="title">
                             <h2> 👋 Welcome Back!</h2>
-                            <p>Sign in to continue with Texforex</p>
+                            <p>Sign in to continue with <?= Helper::site_name() ?></p>
                         </div>
 
                         <?= $account->getError() ?>
@@ -93,7 +88,8 @@ html, body {
                                         class="box-input"
                                         type="text"
                                         name="email"
-                                        placeholder="Enter your email address or username"
+                                        value="<?= @$email ?>"
+                                        placeholder="Enter your email address"
                                         required
                                     />
                                 </div>
@@ -155,9 +151,9 @@ html, body {
 <script src="assets/frontend/js/magnific-popup.min.js"></script>
 <script src="assets/frontend/js/aos.js"></script>
 <script src="assets/global/js/datatables.min.js" type="text/javascript" charset="utf8"></script>
-<script src="assets/frontend/js/main830b.js?var=5"></script>
+<script src="assets/frontend/js/main.js"></script>
 <script src="assets/frontend/js/cookie.js"></script>
-<script src="assets/global/js/custom830b.js?var=5"></script>
+<script src="assets/global/js/custom.js"></script>
 
 </body>
 </html>
