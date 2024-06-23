@@ -1,6 +1,6 @@
 <?php
 require_once "includes/init.php";
-define("PAGE","depositlog");
+define("PAGE","withdrawlog");
 
 if(!logged_in()){
     Helper::redirect("../login");
@@ -8,8 +8,7 @@ if(!logged_in()){
 
 
 // query investments
-
-$stmt = $kon->prepare("SELECT * FROM deposit WHERE email = :email");
+$stmt = $kon->prepare("SELECT * FROM withdrawals WHERE email = :email ");
 $stmt->bindParam("email", $email);
 $stmt->execute();
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -33,7 +32,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="col-xl-12">
             <div class="site-card">
                 <div class="site-card-header">
-                    <h3 class="title">Funding History</h3>
+                    <h3 class="title">All Withdrawals</h3>
                 </div>
                 <div class="site-card-body">
                     <div class="site-datatable">
@@ -44,11 +43,10 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <tr>
                                         <th>Description</th>
                                         <th>Transactions ID</th>
-                                        <th>Type</th>
                                         <th>Amount</th>
-                                        <th>Fee</th>
                                         <th>Status</th>
                                         <th>Method</th>
+                                        <th>Wallet Address</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -64,25 +62,21 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
                                         <div class="description">
-                                            <strong>Deposit</strong>
-                                            <div class="date"><?= $row['datetime'] ?></div>
+                                            <strong><?= 'Withdrawal' ?></strong>
+                                            <div class="date"><?= $row['date_added'] ?></div>
                                         </div>
                                     </div>
                                 </td>
                                 <td><strong><?= $row['transaction_id'] ?></strong></td>
-                                <td>
-                                    <div
-                                        class="site-badge primary-bg"><?= $row['type'] ?></div>
-                                </td>
 
                                 <td><strong
                                         class="green-color">+<?= $row['amount'] ?> USD</strong>
                                 </td>
-                                <td><strong><?= $row['fee'] ?> USD</strong></td>
                                 <td>
                                     <div class="site-badge success"><?= $row['status'] ?></div>
                                                                     </td>
-                                <td><strong><?= $row['gateway'] ?></strong></td>
+                                <td><strong><?= $row['wallet_type'] ?></strong></td>
+                                <td><strong><?= $row['wallet_address'] ?></strong></td>
                             </tr>
                             <?php } ?>
 

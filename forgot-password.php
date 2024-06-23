@@ -1,28 +1,70 @@
 <?php 
     require_once("user/includes/init.php");
+    require_once("includes/email/email.php");
     if(logged_in()){
         Helper::redirect("user/dashboard");
     }
     $account = new Account($kon);
 
-    if(isset($_POST['login'])){
+    $error="";
+    if(isset($_POST['forgot'])){
         $email = Sanitizer::sanitizeEmail($_POST['email']);
-        $pw = Sanitizer::sanitizeInput($_POST['password']);
+        $account = new Account($kon);
+        if($account->email_exist($email)){
+            // set new password
+            $password = Helper::randomString(12);
+            $updt = $kon->prepare("UPDATE users SET password = :pass WHERE email = :em");
+            $updt->bindParam(":pass", $password);
+            $updt->bindParam(":em", $email);
+            $done = $updt->execute();
+            if($done){
+                // Email new password
+                $logo = Helper::site_logo();
+                $uza = new User($kon, $email);
+                $firstname = $uza->firstname();
+                $lastname = $uza->lastname();
+                $subject = "New password";
+                $html = "<!DOCTYPE html>
+                <html lang='en'>
+                <head>
+                    <meta charset='UTF-8'>
+                    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                    <title>Email</title>
+                </head>
+                <body style='font-family: \"Segoe UI\", Tahoma, Geneva, Verdana, sans-serif;font-size: 16px;color: #474747;line-height:30px;'>
 
-        $wasSuccessful = $account->login($email, $pw);
+                    <div style='background-color: #6d08a8;height:10px;width:100%;'></div>
+                    <div style='background-color: #ffffff;padding:10px 0;width:100%;display:flex;justify-content:center;'>
+                        <img src='$logo' alt='logo' width='100'>
+                    </div>
+                    <div style='padding: 20px;'>
+                        <div style='font-weight:600;font-size: 18px;margin-bottom: 30px;'>Verify Email Address</div>    
 
-        if($wasSuccessful){
-            // check if email is verified
-            if($account->emailIsVerified($email)){
-                $_SESSION['crypBroke'] = $email;
-                setcookie("crypBroke", $email, time() + (86400 * 1), "/");          
-                Helper::redirect("user/dashboard");
-            }else{
-                $fakeToken = Helper::randomString(35);
-                Helper::redirect("email_confirmation?pass=$fakeToken&qm=$email");
+                        <div style='margin-bottom: 10px;'>Hello $firstname $lastname</div>
+                        <div>
+                        You have requested for a password reset. Here's your new temporary password.
+                        <p>New password: $password </p>
+                        <p>Login with your new temporary password and set a new password immediately. If you did not request for a password change, delete this mail and change your current password immediately.</p>
+                        
+                        </div>
+
+                        <div style='margin-top: 10px;'>
+                        Regards,
+                        <p>Wealth Fusion Team</p>
+                        </div>
+
+                        
+                    </div>
+                    <div style='background-color: #6d08a8;height:10px;width:100%;'></div>
+                </body>
+                </html>";
+                sendMail($email, $subject, $html);
+
+                Helper::redirect('forgot-password-success');
             }
+        }else{
+            $error = "Email not found";
         }
-
     }
 ?>
 <!DOCTYPE html>
@@ -89,9 +131,9 @@ html, body {
 
 
                             <form method="POST" action="">
-                                <!-- Email Address -->
+                            <?= $error == '' ? '' : "<div class='alert alert-danger alert-dismissible fade show' role='alert'>$error <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button> </div>" ?>
 
-                                <div class="single-field">
+                                <div class="single-field <?= $hide ?>">
                                     <label class="box-label" for="email">Email</label>
                                     <input
                                         class="box-input"
@@ -99,17 +141,17 @@ html, body {
                                         name="email"
                                         placeholder="Enter your email address"
                                         required
-                                        value=""
+                                        value="<?= @$email ?>"
                                     />
                                 </div>
 
 
-                                <button type="submit" class="site-btn grad-btn w-100">
+                                <button type="submit" name="forgot" class="site-btn grad-btn w-100 <?= $hide ?>">
                                     Email Password Reset Link
                                 </button>
                             </form>
 
-                            <div class="singnup-text">
+                            <div class="singnup-text <?= $hide ?>">
                                 <p>Already have an account? <a
                                         href="login">Login</a></p>
                             </div>

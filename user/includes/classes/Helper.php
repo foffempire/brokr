@@ -6,19 +6,19 @@ class Helper{
 		return "Wealth Fusion";
 	}
 
-	public static function siteACR(){
-		return "FLIP";
+	public static function site_logo(){
+		return "https://texforex.com/assets/global/images/hH42szx7wOd36BuyKWHJ.png";
 	}
 
 	public static function site_url(){
-		return "https://flipearners.com/";
+		return "https://thewealthfusion.com/";
 	}
 	public static function referral($unik){
 		return Helper::site_url()."register?ref=$unik";
 	}
 
 	public static function site_email(){
-		return "support@flipearners.com";
+		return "support@thewealthfusion.com";
 	}
 
 	public static function redirect($location){

@@ -72,7 +72,7 @@
                         class="anticon anticon-bank"></i><span>Withdraw Funds</span></a>
             </li>
             <li class="side-nav-item <?= PAGE=="withdrawlog"?"active":"" ?> ">
-                <a href="./withdraw/log"><i
+                <a href="./withdraw-log"><i
                         class="anticon anticon-credit-card"></i><span>Withdrawal Log</span></a>
             </li>
 

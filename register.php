@@ -35,6 +35,7 @@
           $giveBonus = $transaction->addTransaction($email, 'Signup Bonus', 10, 0, 'Success', 'System');
           if($giveBonus){
             // send mail
+            $logo = Helper::site_logo();
             $link = Helper::site_url()."email-verify?email=$email&prc=$prc";
             $fakeToken = Helper::randomString(35);
             $subject = "Verify your email";
@@ -49,7 +50,7 @@
 
                   <div style='background-color: #6d08a8;height:10px;width:100%;'></div>
                   <div style='background-color: #ffffff;padding:10px 0;width:100%;display:flex;justify-content:center;'>
-                      <img src='./assets/global/images/Z5TuPXphNN6rtz4h278X.png' alt='logo' width='40'>
+                      <img src='$logo' alt='logo' width='100'>
                   </div>
                   <div style='padding: 20px;'>
                       <div style='font-weight:600;font-size: 18px;margin-bottom: 30px;'>Verify Email Address</div>    

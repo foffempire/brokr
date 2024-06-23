@@ -204,10 +204,6 @@ if(isset($_POST['submit'])){
         </div>
     </div>
 
-
-    <!-- Automatic Popup -->
-    
-    <!-- /Automatic Popup End -->
 </div>
 <!--/Full Layout-->
 
