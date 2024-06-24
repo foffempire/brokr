@@ -1,0 +1,29 @@
+.ticket-form {
+  width: 60%;
+  font-size: 12px;
+}
+
+.ticket-form label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.ticket-form input,
+.ticket-form textarea,
+.ticket-form button {
+  font-size: 12px;
+}
+
+.acct-radio span {
+  margin-right: 10px;
+}
+
+.acct-radio span label {
+  font-weight: 400;
+}
+
+@media only screen and (max-width: 600px) {
+  .ticket-form {
+    width: 100%;
+  }
+}

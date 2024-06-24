@@ -1,0 +1,11 @@
+@import url("./global.css");
+@import url("./bootstrap.min.css");
+@import url("./all.min.css");
+@import url("./components/header.css");
+@import url("./components/loader.css");
+@import url("./components/index.css");
+@import url("./components/messages.css");
+@import url("./components/forms.css");
+@import url("./components/profile.css");
+@import url("./components/login.css");
+@import url("./components/auth.css");

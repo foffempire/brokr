@@ -1,0 +1,16 @@
+.auth-bg {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #333;
+  z-index: 10;
+}
+
+.auth-form {
+  width: 350px;
+}

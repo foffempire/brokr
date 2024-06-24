@@ -7,7 +7,7 @@ class Helper{
 	}
 
 	public static function site_logo(){
-		return "https://texforex.com/assets/global/images/hH42szx7wOd36BuyKWHJ.png";
+		return "https://thewealthfusion.com/assets/global/images/hH42szx7wOd36BuyKWHJ.png";
 	}
 
 	public static function site_url(){

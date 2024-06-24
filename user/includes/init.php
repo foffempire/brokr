@@ -44,7 +44,13 @@ spl_autoload_register(function($class_name){
 if(logged_in()){
 	$email = $_SESSION['crypBroke'];
 	$user = new User($kon, $email);
+
+	if($user->isActive()==0){
+		Helper::redirect('logout');
+	}
 }
+
+
 
 
 // *************random string****************

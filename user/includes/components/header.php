@@ -5,8 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="csrf-token" content="T5sMv6S0k2pg8ALZwe7wkvn4j57HRlWkWqrzXUOh">
-    <meta name="keywords" content="Texforex">
-    <meta name="description" content="Texforex">
+    <meta name="keywords" content="<?= Helper::site_name() ?>">
+    <meta name="description" content="<?= Helper::site_name() ?>">
     <!-- <link rel="canonical" href="https://texforex.com/user/dashboard"/> -->
     <link rel="shortcut icon" href="../assets/global/images/Z5TuPXphNN6rtz4h278X.png" type="image/x-icon"/>
 
@@ -17,10 +17,11 @@
     <link rel="stylesheet" href="../assets/frontend/css/owl.carousel.min.css"/>
     <link rel="stylesheet" href="../assets/frontend/css/nice-select.css"/>
     <link rel="stylesheet" href="../assets/global/css/datatables.min.css"/>
-        <link rel="stylesheet" type="text/css" href="../assets/vendor/mckenziearts/laravel-notify/css/notify.css"/>        <link rel="stylesheet" href="../assets/global/css/custom.css"/>
+    <link rel="stylesheet" type="text/css" href="../assets/vendor/mckenziearts/laravel-notify/css/notify.css"/>        
+    <link rel="stylesheet" href="../assets/global/css/custom.css"/>
     <link rel="stylesheet" href="../assets/frontend/css/magnific-popup.css"/>
-            <link rel="stylesheet" href="../assets/frontend/css/aos.css"/>
-        <link rel="stylesheet" href="../assets/frontend/css/styles.css"/>
+    <link rel="stylesheet" href="../assets/frontend/css/aos.css"/>
+    <link rel="stylesheet" href="../assets/frontend/css/styles.css"/>
 
     <style>
 .site-head-tag {
@@ -31,9 +32,31 @@
 html, body {
   overflow-x: hidden;
 }
+
+.goog-te-gadget {
+    font-family: arial;
+    font-size: 0 !important;
+    color: #003049;
+    white-space: nowrap;
+}
+
+.goog-te-gadget span {
+    display: none;
+}
+.goog-te-gadget .goog-te-combo {
+    border: none;
+    background-color: #003049;
+    color: #fff;
+}
+.goog-te-gadget .goog-te-combo::focus {
+    border: none;
+    background-col
+    outline: none;
+}
+
     </style>
 
-    <title>Texforex -     Dashboard
+    <title><?= Helper::site_name() ?> - Forex | Stock | Crypto
 </title>
 
 
@@ -73,15 +96,13 @@ html, body {
                     </div>
                 </div>
                 <div class="single-right">
-                    <select name="language" id="" class="site-nice-select"
-                            onchange="window.location.href=this.options[this.selectedIndex].value;">
-                                                    <option
-                                value="https://texforex.com/language-update?name=en" selected>English</option>
-                                                    <option
-                                value="https://texforex.com/language-update?name=es" >Spanish</option>
-                                                    <option
-                                value="https://texforex.com/language-update?name=fr" >France</option>
-                                            </select>
+                    <!-- <select name="language" id="langua" class="site-nice-select"
+                            onchange="">
+                        <option value="en" selected>English</option>
+                       <option value="es" >Spanish</option>
+                        <option value="fr" >France</option>
+                    </select> -->
+                    <div id="google_translate_element"></div>
                 </div>
                 <div class="single-right">
                     <button

@@ -8,7 +8,7 @@ if(!logged_in()){
 
 
 // query investments
-$stmt = $kon->prepare("SELECT * FROM transactions WHERE email = :email ");
+$stmt = $kon->prepare("SELECT * FROM transactions WHERE email = :email ORDER BY id DESC");
 $stmt->bindParam("email", $email);
 $stmt->execute();
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);

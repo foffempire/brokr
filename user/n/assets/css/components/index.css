@@ -1,0 +1,28 @@
+.acct-summary {
+  display: flex;
+  width: 55%;
+  padding: 20px 0;
+}
+
+.acct-summary .sum-icon {
+  padding: 0;
+  height: 45px;
+  width: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  margin-right: 20px;
+}
+.acct-summary i {
+  font-size: 25px;
+}
+
+.sum-desc h6 {
+  padding: 0 0 7px 0;
+  margin: 0;
+}
+
+.sum-desc i {
+  font-size: 14px;
+}

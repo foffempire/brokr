@@ -1,0 +1,45 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+  font-size: 12px;
+}
+
+:root {
+  --primary-color: #153d78;
+}
+
+.my-primary-bg {
+  background-color: var(--primary-color) !important;
+}
+
+.my-primary-text {
+  color: var(--primary-color) !important;
+}
+
+.hide-it {
+  display: none;
+}
+
+.font-12 {
+  font-size: 12px;
+}
+.font-14 {
+  font-size: 14px;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.alert {
+  padding: 7px 10px !important;
+}
+
+.not-allowed {
+  cursor: not-allowed !important;
+}

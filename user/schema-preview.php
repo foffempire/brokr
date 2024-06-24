@@ -39,7 +39,7 @@ if(isset($_POST['submit'])){
                 $error = "Insufficient fund in your main account";
             }else{
                 // insert into invesments and debit account
-                $status = "Running";
+                $status = "running";
                 $insert = $invest->mainInvest($email, $amount, $plan, $wallet, $status, $rate);
                 if($insert){
                     Helper::redirect("investment_success");
@@ -51,7 +51,7 @@ if(isset($_POST['submit'])){
                 $error = "Insufficient fund in your profit account";
             }else{
                 // insert into invesments and debit account
-                $status = "Running";
+                $status = "running";
                 $insert = $invest->profitInvest($email, $amount, $plan, $wallet, $status, $rate);
                 if($insert){
                     Helper::redirect("investment_success");

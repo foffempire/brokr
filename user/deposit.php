@@ -13,7 +13,7 @@ if(isset($_POST['deposit'])){
     $amount = Sanitizer::sanitizeInput($_POST['amount']);
     $type = "Deposit";
     $fee = 0;
-    $status = "Pending";
+    $status = "pending";
     
     $image = $_FILES['image'];
     $target_dir = "./images/deposit/";

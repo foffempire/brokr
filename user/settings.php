@@ -284,33 +284,21 @@ if(isset($_POST['profileUpdate'])){
 </div>
 
     
-    <div class="row">
-
-    
+<div class="row">    
     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-    <div class="site-card">
-        <div class="site-card-header">
-            <h3 class="title">2FA Security</h3>
-        </div>
-        <div class="site-card-body">
-
-                            <a href="./settings/2fa"
-                   class="site-btn blue-btn">Obtaining a Secret Key for Two-Factor Authentication</a>
-                    </div>
-    </div>
-</div>
-
-    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                    <div class="site-card">
-                <div class="site-card-header">
-                    <h3 class="title">KYC</h3>
-                </div>
-                <div class="site-card-body">
-
-                                            <a href="./kyc" class="site-btn blue-btn">Upload KYC</a>
-                        <p class="mt-3"></p>
-                                    </div>
+        <div class="site-card">
+            <div class="site-card-header">
+                <h3 class="title">KYC</h3>
             </div>
+            <div class="site-card-body">
+                <a href="./kyc" class="site-btn blue-btn">Upload KYC</a>
+                <p class="mt-3"></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+        
         
         <div class="site-card">
             <div class="site-card-header">
@@ -320,6 +308,7 @@ if(isset($_POST['profileUpdate'])){
                 <a href="./change-password" class="site-btn blue-btn">Change Password</a>
             </div>
         </div>
+
     </div>
 </div>
 

@@ -1,0 +1,40 @@
+.profile-header {
+  padding-bottom: 20px;
+  border-bottom: 1px #ccc solid;
+}
+
+.profile-header h3 {
+  font-size: 18px;
+}
+
+.profile-header a {
+  font-size: 10px;
+}
+
+.profile-header span {
+  font-size: 12px;
+}
+.profile-body {
+  margin-top: 20px;
+}
+.acct-info {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  font-size: 12px;
+}
+
+.profile-info {
+  margin: 10px 0;
+}
+.profile-info h6 {
+  font-size: 12px;
+  margin: 0;
+  padding: 0;
+}
+
+/* ************Media Query********** */
+@media only screen and (max-width: 600px) {
+  .acct-info {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

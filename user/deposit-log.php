@@ -7,9 +7,9 @@ if(!logged_in()){
 }
 
 
-// query investments
+// query deposit
 
-$stmt = $kon->prepare("SELECT * FROM deposit WHERE email = :email");
+$stmt = $kon->prepare("SELECT * FROM deposit WHERE email = :email ORDER BY id DESC");
 $stmt->bindParam("email", $email);
 $stmt->execute();
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);

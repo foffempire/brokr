@@ -93,6 +93,7 @@
 		public function zip(){
 			return $this->data['zipcode'];
 		}
+
 		public function regDate(){
 			return $this->data['reg_date'];
 		}
