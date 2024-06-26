@@ -13,7 +13,7 @@
     
     // for Live connection
     // define("HOST", "localhost");
-    // define("DBNAME", "hpodhsmn_flip");
-    // define("DBUSER", "hpodhsmn_flip");
+    // define("DBNAME", "rrmkqsru_flip");
+    // define("DBUSER", "rrmkqsru_flip");
     // define("DBPASS", "Y@pA3Cp-{3(x");
 ?>

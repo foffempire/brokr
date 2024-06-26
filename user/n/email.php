@@ -14,15 +14,15 @@ function sendMail($email, $subject, $body){
         //Server settings
         $mail->SMTPDebug = SMTP::DEBUG_OFF;                      //Enable verbose debug output
         $mail->isSMTP();                                            //Send using SMTP
-        $mail->Host       = 'flipearners.com';                     //Set the SMTP server to send through
+        $mail->Host       = 'thewealthfusion.com';                     //Set the SMTP server to send through
         $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-        $mail->Username   = 'support@flipearners.com';                     //SMTP username
-        $mail->Password   = 'CgR7VYKYvsuR';                               //SMTP password
+        $mail->Username   = 'support@thewealthfusion.com';                     //SMTP username
+        $mail->Password   = 'FusioN*007#';                               //SMTP password
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
         $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
         //Recipients
-        $mail->setFrom('support@flipearners.com', 'Flipearners');
+        $mail->setFrom('support@thewealthfusion.com', 'Wealth Fusion');
         $mail->addAddress($email);     //Add a recipient
 
 

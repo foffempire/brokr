@@ -10,6 +10,8 @@
     }else{
       $ref = null;
     }
+
+    $error = '';
     $account = new Account($kon);
 
     if(isset($_POST['register'])){
@@ -28,54 +30,70 @@
 
         $prc = Helper::randomString(15);
 
-        $wasSuccessful = $account->signup($email, $pw, $pw2,$prc, $ref, $firstname, $lastname, $username, $country, $phone);
+        if(isset($_POST['g-recaptcha-response']) && !empty($_POST['g-recaptcha-response'])) {
 
-        if($wasSuccessful){
-          $transaction = new Transaction($kon);
-          $giveBonus = $transaction->addTransaction($email, 'Signup Bonus', 10, 0, 'Success', 'System');
-          if($giveBonus){
-            // send mail
-            $logo = Helper::site_logo();
-            $link = Helper::site_url()."email-verify?email=$email&prc=$prc";
-            $fakeToken = Helper::randomString(35);
-            $subject = "Verify your email";
-            $html = "<!DOCTYPE html>
-              <html lang='en'>
-              <head>
-                  <meta charset='UTF-8'>
-                  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-                  <title>Email</title>
-              </head>
-              <body style='font-family: \"Segoe UI\", Tahoma, Geneva, Verdana, sans-serif;font-size: 16px;color: #474747;line-height:30px;'>
+          // Google secret API
+          $secretAPIkey = '6LdxtAEqAAAAALuFIR_9alT40W1uaQ5A_wZiNoCS';
 
-                  <div style='background-color: #6d08a8;height:10px;width:100%;'></div>
-                  <div style='background-color: #ffffff;padding:10px 0;width:100%;display:flex;justify-content:center;'>
-                      <img src='$logo' alt='logo' width='100'>
-                  </div>
-                  <div style='padding: 20px;'>
-                      <div style='font-weight:600;font-size: 18px;margin-bottom: 30px;'>Verify Email Address</div>    
+          // reCAPTCHA response verification
+          $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secretAPIkey.'&response='.$_POST['g-recaptcha-response']);
 
-                      <div style='margin-bottom: 10px;'>Hi $firstname $lastname</div>
-                      <div>Please click the button below to verify your email address.</div>
+          // Decode JSON data
+          $response = json_decode($verifyResponse);
+              if($response->success){
+                $wasSuccessful = $account->signup($email, $pw, $pw2,$prc, $ref, $firstname, $lastname, $username, $country, $phone);
 
-                      <div style='margin:30px 0;'>
-                          <a href='$link' style='padding: 10px 25px; color: #ffffff;background-color: #ff0055;text-decoration: none;'>VERIFY EMAIL ADDRESS</a>
-                      </div>
-                  </div>
-                  <div style='background-color: #6d08a8;height:10px;width:100%;'></div>
-                  <div style='padding: 20px;'>
-                      <p>If you're having trouble clicking the 'Verify Email Address' button, copy abd paste the URL below into your web browser: <a href='$link'>$link</a></p>
-                  </div>
-                  <div style='background-color: #6d08a8;height:10px;width:100%;'></div>
-              </body>
-              </html>";
-            sendMail($email, $subject, $html);
+                if($wasSuccessful){
+                  $transaction = new Transaction($kon);
+                  $giveBonus = $transaction->addTransaction($email, 'Signup Bonus', 10, 0, 'Success', 'System');
+                  if($giveBonus){
+                    // send mail
+                    $logo = Helper::site_logo();
+                    $link = Helper::site_url()."email-verify?email=$email&prc=$prc";
+                    $fakeToken = Helper::randomString(35);
+                    $subject = "Verify your email";
+                    $html = "<!DOCTYPE html>
+                      <html lang='en'>
+                      <head>
+                          <meta charset='UTF-8'>
+                          <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                          <title>Email</title>
+                      </head>
+                      <body style='font-family: \"Segoe UI\", Tahoma, Geneva, Verdana, sans-serif;font-size: 16px;color: #474747;line-height:30px;'>
 
-            // redirect
-            Helper::redirect("email_confirmation?pass=$fakeToken&qm=$email");  
-          }
-        }
+                          <div style='background-color: #6d08a8;height:10px;width:100%;'></div>
+                          <div style='background-color: #ffffff;padding:10px 0;width:100%;display:flex;justify-content:center;'>
+                              <img src='$logo' alt='logo' width='100'>
+                          </div>
+                          <div style='padding: 20px;'>
+                              <div style='font-weight:600;font-size: 18px;margin-bottom: 30px;'>Verify Email Address</div>    
 
+                              <div style='margin-bottom: 10px;'>Hi $firstname $lastname</div>
+                              <div>Please click the button below to verify your email address.</div>
+
+                              <div style='margin:30px 0;'>
+                                  <a href='$link' style='padding: 10px 25px; color: #ffffff;background-color: #ff0055;text-decoration: none;'>VERIFY EMAIL ADDRESS</a>
+                              </div>
+                          </div>
+                          <div style='background-color: #6d08a8;height:10px;width:100%;'></div>
+                          <div style='padding: 20px;'>
+                              <p>If you're having trouble clicking the 'Verify Email Address' button, copy abd paste the URL below into your web browser: <a href='$link'>$link</a></p>
+                          </div>
+                          <div style='background-color: #6d08a8;height:10px;width:100%;'></div>
+                      </body>
+                      </html>";
+                    sendMail($email, $subject, $html);
+
+                    // redirect
+                    Helper::redirect("email_confirmation?pass=$fakeToken&qm=$email");  
+                  }
+                }                 
+              } else {
+                $error = "Robot verification failed, please try again.";
+              }       
+      } else{ 
+        $error = "Please check on the reCAPTCHA box.";
+      } 
     }
 ?>
 <!DOCTYPE html>
@@ -138,6 +156,7 @@
               </div>
               <div class="site-auth-form">
               <?= $account->getError() ?>
+              <?= $error == '' ? '' : "<div class='alert alert-warning alert-dismissible fade show' role='alert'>$error <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button> </div>" ?>
                 <form
                   method="POST"                  
                   class="row"
@@ -640,11 +659,7 @@
                   </div>
                   <div class="col-xl-12 col-lg-12 col-md-12 col-12">
                     <div class="single-field">
-                      <div
-                        class="g-recaptcha"
-                        id="feedback-recaptcha"
-                        data-sitekey="6Lfvv2UpAAAAALUTllaPMPdroQ-8Lc1Hn6xP97EV"
-                      ></div>
+                      <div class="g-recaptcha" data-sitekey="6LdxtAEqAAAAAMCOCnGLAqC8qkO40VPG935ubxit"></div>
                     </div>
                   </div>
                   <div class="col-xl-12 col-lg-12 col-md-12 col-12">
@@ -706,6 +721,7 @@
 <script src="assets/frontend/js/main.js"></script>
 <script src="assets/frontend/js/cookie.js"></script>
 <script src="assets/global/js/custom.js"></script>
+<script src="https://www.google.com/recaptcha/api.js"></script>
 
 
     <script

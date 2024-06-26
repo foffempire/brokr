@@ -3,25 +3,43 @@
     if(logged_in()){
         Helper::redirect("user/dashboard");
     }
+    $error = '';
     $account = new Account($kon);
 
     if(isset($_POST['login'])){
         $email = Sanitizer::sanitizeEmail($_POST['email']);
         $pw = Sanitizer::sanitizeInput($_POST['password']);
 
-        $wasSuccessful = $account->login($email, $pw);
+        if(isset($_POST['g-recaptcha-response']) && !empty($_POST['g-recaptcha-response'])) {
 
-        if($wasSuccessful){
-            // check if email is verified
-            if($account->emailIsVerified($email)){
-                $_SESSION['crypBroke'] = $email;
-                setcookie("crypBroke", $email, time() + (86400 * 1), "/");          
-                Helper::redirect("user/dashboard");
-            }else{
-                $fakeToken = Helper::randomString(35);
-                Helper::redirect("email_confirmation?pass=$fakeToken&qm=$email");
-            }
-        }
+            // Google secret API
+            $secretAPIkey = '6LdxtAEqAAAAALuFIR_9alT40W1uaQ5A_wZiNoCS';
+
+            // reCAPTCHA response verification
+            $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secretAPIkey.'&response='.$_POST['g-recaptcha-response']);
+
+            // Decode JSON data
+            $response = json_decode($verifyResponse);
+                if($response->success){
+                    $wasSuccessful = $account->login($email, $pw);
+
+                    if($wasSuccessful){
+                        // check if email is verified
+                        if($account->emailIsVerified($email)){
+                            $_SESSION['crypBroke'] = $email;
+                            setcookie("crypBroke", $email, time() + (86400 * 1), "/");          
+                            Helper::redirect("user/dashboard");
+                        }else{
+                            $fakeToken = Helper::randomString(35);
+                            Helper::redirect("email_confirmation?pass=$fakeToken&qm=$email");
+                        }
+                    }
+                } else {
+                    $error = "Robot verification failed, please try again.";
+                }       
+        } else{ 
+            $error = "Please check on the reCAPTCHA box.";
+        }       
 
     }
 ?>
@@ -78,7 +96,7 @@ html, body {
                         </div>
 
                         <?= $account->getError() ?>
-                        
+                        <?= $error == '' ? '' : "<div class='alert alert-warning alert-dismissible fade show' role='alert'>$error <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button> </div>" ?>
 
                         <div class="site-auth-form">
                             <form method="POST" action="">
@@ -104,7 +122,10 @@ html, body {
                                             required
                                         />
                                     </div>
-                                </div>                                
+                                </div>    
+                                <div class="form-group mb-3">
+                                    <div class="g-recaptcha" data-sitekey="6LdxtAEqAAAAAMCOCnGLAqC8qkO40VPG935ubxit"></div>
+                                </div>                            
                                 <div class="single-field">
                                     <input
                                         class="form-check-input check-input"
@@ -118,7 +139,9 @@ html, body {
 
                                     <span class="forget-pass-text"><a
                                                 href="forgot-password">Forget Password</a></span>
-                                                                    </div>
+                                    </div>
+
+                        
                                 <button type="submit" name="login" class="site-btn grad-btn w-100">
                                     Account Login
                                 </button>
@@ -154,6 +177,7 @@ html, body {
 <script src="assets/frontend/js/main.js"></script>
 <script src="assets/frontend/js/cookie.js"></script>
 <script src="assets/global/js/custom.js"></script>
+<script src="https://www.google.com/recaptcha/api.js"></script>
 
 </body>
 </html>
