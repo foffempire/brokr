@@ -48,11 +48,12 @@ class Helper{
         return "assets/img/qrcode/alt/$slug.png";
     }
 
+	public static function reCaptchaSecretKey(){
+        return "see env file";
+    }
+	public static function reCaptchaPublicKey(){
+        return "see env file";
+    }
+
 }
-
-
-
-
-
-
  ?>

@@ -33,7 +33,7 @@
         if(isset($_POST['g-recaptcha-response']) && !empty($_POST['g-recaptcha-response'])) {
 
           // Google secret API
-          $secretAPIkey = '6LdxtAEqAAAAALuFIR_9alT40W1uaQ5A_wZiNoCS';
+          $secretAPIkey = Helper::reCaptchaSecretKey();
 
           // reCAPTCHA response verification
           $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secretAPIkey.'&response='.$_POST['g-recaptcha-response']);
@@ -659,7 +659,7 @@
                   </div>
                   <div class="col-xl-12 col-lg-12 col-md-12 col-12">
                     <div class="single-field">
-                      <div class="g-recaptcha" data-sitekey="6LdxtAEqAAAAAMCOCnGLAqC8qkO40VPG935ubxit"></div>
+                      <div class="g-recaptcha" data-sitekey="<?= Helper::reCaptchaPublicKey() ?>"></div>
                     </div>
                   </div>
                   <div class="col-xl-12 col-lg-12 col-md-12 col-12">
